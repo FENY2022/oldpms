@@ -397,6 +397,7 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
 
 
 
+
 // 1. Create a single timestamp from your date and time fields
 $fullTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
 
@@ -406,12 +407,13 @@ $formattedDate = date('F j, Y', $fullTimestamp);
 
 // 3. Calculate the adjusted time as you requested
 $adjustedTime = date('h:i A', strtotime($row['Time'] . ' +1 minutes'));
-$adjustedTimeReceive = date('h:i A', strtotime($row['Time'] . ' -3 minutes'));
+
 
 // 4. Create the final string to display.
 // I've wrapped it in a span to make it slightly smaller and gray for readability.
 $timestampDisplay = ' <span style="font-size: 12px; color: #888;">' . $formattedDate . ' at ' . $adjustedTime . '</span>';
-$timestampDisplayReceive = ' <span style="font-size: 12px; color: #888;">' . $formattedDate . ' at ' . $adjustedTimeReceive . '</span>';
+
+
 
 
 // --- END OF ADDED LOGIC ---
@@ -512,9 +514,8 @@ if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been
     // echo '<p style="font-size: 14px; color: #555;">Additional details or information can be added here.</p>';
 }
 
-                             echo   '<li style="background: #fff;">' ;
-
-                     
+                              echo   '<br>';
+                              echo   '<li style="background: #fff;">' ;
                               echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
                               echo   '<div class="content">' ;
                               echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
@@ -531,13 +532,6 @@ if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been
 
 
                               echo   '</li>' ;
-
-
-                              if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'The credit officer will check and verify the order of payment prepared by FUU and Forward to CENR Officer/Head DENR Satellite') !== false) {
-                                    echo '<p style="font-size: 14px; color: #28a745;">';
-                                    echo '<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> ';
-                                    echo '<span class="badge" style="background:#28a745;color:#fff;">Received </span> by ' . $CENRO_Office . ' CENR Officer/Head DENR Satellite Office' . $timestampDisplayReceive . '</p>';
-                                }
 
 
 
