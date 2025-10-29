@@ -9,7 +9,24 @@ $l_id = $_GET['lumber_app_id'];
 
 ?>
 
+<?php
 
+if (isset($_GET['lumber_app_id'])) {
+    $l_id = $_GET['lumber_app_id'];
+
+    $sql = "SELECT Office, office_under FROM lumber_application WHERE lumber_app_id = :id";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute([':id' => $l_id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+        $CENRO_Office = $row['Office'] ;
+        $PENRO_Office = $row['office_under'] ;
+    } else {
+        echo "No record found.";
+    }
+}
+?>
 
 
 <!doctype html>
@@ -169,7 +186,9 @@ function_alert("Your site visit schedule has been affirmed for site validation."
 
 }
 
+
 ?>
+
 
 
 
@@ -375,110 +394,152 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
 
               }  else{
 // main
-                              echo   '<li style="background: #fff;">' ;
+
+
+
+// 1. Create a single timestamp from your date and time fields
+$fullTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
+
+// 2. Format the Date part (e.g., "October 29, 2025")
+// This replaces the need for a custom getFullMonthNameFromDate() function
+$formattedDate = date('F j, Y', $fullTimestamp);
+
+// 3. Calculate the adjusted time as you requested
+$adjustedTime = date('h:i A', strtotime($row['Time'] . ' +1 minutes'));
+$adjustedTimeReceive = date('h:i A', strtotime($row['Time'] . ' -3 minutes'));
+
+// 4. Create the final string to display.
+// I've wrapped it in a span to make it slightly smaller and gray for readability.
+$timestampDisplay = ' <span style="font-size: 12px; color: #888;">' . $formattedDate . ' at ' . $adjustedTime . '</span>';
+$timestampDisplayReceive = ' <span style="font-size: 12px; color: #888;">' . $formattedDate . ' at ' . $adjustedTimeReceive . '</span>';
+
+
+// --- END OF ADDED LOGIC ---
+
+
+if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been evaluated and officially received.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' Credit Officer' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'The credit officer will check and verify the order of payment prepared by FUU and Forward to CENR Officer/Head DENR Satellite') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' CENR Officer/Head DENR Satellite Office' . $timestampDisplay . '</p>';
+
+
+} else if ($row['Title'] == 'CENR Officer/Head DENR Satellite Office' && strpos($row['Details'], 'The CENR Officer/Head DENR Satellite Office will review and approve the Order of Payment. Forward to the Client for Payment.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' Client for Payment' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'Payment confirmed') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' FUU' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'FUU' && strpos($row['Details'], 'On-site validation was successfully conducted.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' Chief, RPS' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Chief, RPS' && strpos($row['Details'], 'Document reviewed and application endorsed to the Deputy CENR Officer/Head DENR Satellite Office.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' Deputy CENRO ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Deputy CENRO' && strpos($row['Details'], 'Document reviewed and application recommended to the CENR Officer for endorsement to the concerned PENR Office.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $CENRO_Office . ' CENR Officer/Head DENR Satellite Office ' . $timestampDisplay . '</p>';
+
+// PENRO 
+    
+} else if ($row['Title'] == 'CENR Officer/Head DENR Satellite Office' && strpos($row['Details'], 'Documents final review, certification and endorsement approved.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $PENRO_Office . ' PENRO FUU ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'PENRO FUU' && strpos($row['Details'], 'Evaluated the endorsed application from the concerned CENR Officer/Head DENR Satellite Offices.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $PENRO_Office . ' PENRO Chief, RPS <br>' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'PENRO Chief, RPS' && strpos($row['Details'], 'Documents reviewed. Application endorsed to the Chief, TSD.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $PENRO_Office . ' PENRO Chief TSD ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'PENRO Chief TSD' && strpos($row['Details'], 'Document reviewed and application recommended to the PENR Officer for endorsement to the Regional Office.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to ' . $PENRO_Office . ' PENR Officer ' . $timestampDisplay . '</p>';
+
+
+    // REGIONAL OFFICE 
+    
+} else if ($row['Title'] == 'PENR Officer' && strpos($row['Details'], 'Final documents review and approved the endorsement of the application to the RED thru ARD TS.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to  Regional Office RO LPDD FUS ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'RO FUS' && strpos($row['Details'], 'Evaluated the endorsed application from the concerned PENROs.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to Regional Office Chief, LPDD <br>' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Chief, LPDD' && strpos($row['Details'], 'Documents reviewed and recommend to ARD TS the approval of the endorsement for the RED to approve the E-Permit.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to Regional Office ARD TS ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Regional Executive Director' && strpos($row['Details'], 'Final document review, approval of the Lumber Dealer E-Permit,') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to Regional Office Records Unit ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'Records Unit' && strpos($row['Details'], 'Released the approved Lumber Dealer E-Permit,') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to Regional Office RO LPDD Client for CSS ' . $timestampDisplay . '</p>';
+
+} else if ($row['Title'] == 'ARD TS' && strpos($row['Details'], 'Reviewed all the documents and approved the endorsement for the RED to approve the Lumber Dealer E-Permit.') !== false) {
+    echo '<p style="font-size: 14px; color: #4A90E2;">';
+    echo '<i class="fa-solid fa-check-circle" style="color: #4A90E2;"></i> ';
+    echo '<span class="badge" style="background:#4A90E2;color:#fff;">Forwarded </span> to Regional Office Regional Executive Director ' . $timestampDisplay . '</p>';
+
+} else {
+    // echo '<p style="font-size: 14px; color: #555;">Additional details or information can be added here.</p>';
+}
+
+                             echo   '<li style="background: #fff;">' ;
+
+                     
                               echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
                               echo   '<div class="content">' ;
                               echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
-                              echo   '</br>' ;
+
                               echo   '<p style="color: #222">';
                               echo   '  '.$row['Details'].'<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
                               echo   '  </p>';
-                    
-                                if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been evaluated and officially received.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> to Credit Officer</p>';
-                                } else if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'The credit officer will check and verify the order of payment prepared by FUU and Forward to CENR Officer/Head DENR Satellite') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> to CENR Officer/Head DENR Satellite Office</p>';
-                                } else if ($row['Title'] == 'CENR Officer/Head DENR Satellite Office' && strpos($row['Details'], 'The CENR Officer/Head DENR Satellite Office will review and approve the Order of Payment. Forward to the Client for Payment.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> to Client for Payment</p>';
-                                } else if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'Payment confirmed') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> to FUU</p>';
-                                } else if ($row['Title'] == 'FUU' && strpos($row['Details'], 'On-site validation was successfully conducted.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> to Chief, RPS</p>';
-
-                                } else if ($row['Title'] == 'Chief, RPS' && strpos($row['Details'], 'Document reviewed and application endorsed to the Deputy CENR Officer/Head DENR Satellite Office.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> Deputy CENRO </p>';
-                              
-                                } else if ($row['Title'] == 'Deputy CENRO' && strpos($row['Details'], 'Document reviewed and application recommended to the CENR Officer for endorsement to the concerned PENR Office.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> CENR Officer/Head DENR Satellite Office </p>';
+  
 
  
 
 
-                                } else if ($row['Title'] == 'CENR Officer/Head DENR Satellite Office' && strpos($row['Details'], 'Documents final review, certification and endorsement approved.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> PENRO FUU </p>';
+                              echo   '</div>';
 
 
-                                } else if ($row['Title'] == 'PENRO FUU' && strpos($row['Details'], 'Evaluated the endorsed application from the concerned CENR Officer/Head DENR Satellite Offices.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> PENRO Chief, RPS </p>';
-                                  $adjustedTime = date('h:i A', strtotime($row['Time'] . ' -22 minutes'));
-                                  echo '<span class="badge bg-warning"><i class="fa-solid fa-calendar-check"></i> Received by </span> PENRO FUU on ' . getFullMonthNameFromDate($date) . ' at ' . $adjustedTime . '</p>';
+                              echo   '</li>' ;
 
 
-
-                                } else if ($row['Title'] == 'PENRO Chief, RPS' && strpos($row['Details'], 'Documents reviewed. Application endorsed to the Chief, TSD.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> PENRO Chief TSD </p>';
-                                } else if ($row['Title'] == 'PENRO Chief TSD' && strpos($row['Details'], 'Document reviewed and application recommended to the PENR Officer for endorsement to the Regional Office.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> PENR Officer </p>';
-                                } else if ($row['Title'] == 'PENR Officer' && strpos($row['Details'], 'Final documents review and approved the endorsement of the application to the RED thru ARD TS.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> RO FUS </p>';
-                                } else if ($row['Title'] == 'RO FUS' && strpos($row['Details'], 'Evaluated the endorsed application from the concerned PENROs.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> Chief, LPDD </p>';
-                                                                    $adjustedTime = date('h:i A', strtotime($row['Time'] . ' -22 minutes'));
-                                    echo '<span class="badge bg-warning"><i class="fa-solid fa-calendar-check"></i> Received by </span> RO FUS on ' . getFullMonthNameFromDate($date) . ' at ' . $adjustedTime . '</p>';
-
-
-                                } else if ($row['Title'] == 'Chief, LPDD' && strpos($row['Details'], 'Documents reviewed and recommend to ARD TS the approval of the endorsement for the RED to approve the E-Permit.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> ARD TS </p>';
-                                } else if ($row['Title'] == 'Regional Executive Director' && strpos($row['Details'], 'Final document review, approval of the Lumber Dealer E-Permit,') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> Records Unit </p>';
-                                } else if ($row['Title'] == 'Records Unit' && strpos($row['Details'], 'Released the approved Lumber Dealer E-Permit,') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> Client for CSS </p>';
-                                } else if ($row['Title'] == 'ARD TS' && strpos($row['Details'], 'Reviewed all the documents and approved the endorsement for the RED to approve the Lumber Dealer E-Permit.') !== false) {
-                                  echo '<p style="font-size: 14px; color: green;">';
-                                  echo '<i class="fa-solid fa-check-circle" style="color: green;"></i> ';
-                                  echo '<span class="badge bg-success">Forwarded </span> Regional Executive Director </p>';
-
-                                } else {
-                                  // echo '<p style="font-size: 14px; color: #555;">Additional details or information can be added here.</p>';
+                              if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'The credit officer will check and verify the order of payment prepared by FUU and Forward to CENR Officer/Head DENR Satellite') !== false) {
+                                    echo '<p style="font-size: 14px; color: #28a745;">';
+                                    echo '<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> ';
+                                    echo '<span class="badge" style="background:#28a745;color:#fff;">Received </span> by ' . $CENRO_Office . ' CENR Officer/Head DENR Satellite Office' . $timestampDisplayReceive . '</p>';
                                 }
 
-                        
-  
 
-                              echo   '</div>';
-                              echo   '</li>' ;
 
                             }
 
