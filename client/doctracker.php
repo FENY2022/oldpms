@@ -292,22 +292,16 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
 
     } elseif (($row['Title']) == ('Application successfully submitted subject for evaluation.')) {
 
-    // condition
-    echo '<li style="background: #fff;">';
-    echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-    echo '<div class="content">';
-    echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $CENRO_Office . ' FUU - ' . $row['Title'] . '</h5>';
-
-    echo '<p style="color: #222">';
-    echo  ' ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600;"></a>';
-
-    
-
-
-
-    echo '</p>';
-    echo '</div>';
-    echo '</li>';
+            // Condition
+            echo '<li style="background: #fff;">';
+            echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+            echo '<div class="content">';
+            echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $CENRO_Office . ' FUU - ' . $row['Title'] . '</h5>';
+            echo '<p style="color: #222">';
+            echo  ' ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600;"></a>';
+            echo '</p>';
+            echo '</div>';
+            echo '</li>';
 
 
 
@@ -602,8 +596,8 @@ if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been
 
 } else if ($row['Title'] == 'Credit Officer' && strpos($row['Details'], 'Payment confirmed') !== false) {
     echo '<p style="font-size: 14px; color: #28a745;">'; // Changed color
-    echo '<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> '; // Changed color
-        echo '<span class="badge" style="background:#28a745;color:#fff;">Received by </span>' . $CENRO_Office . ' Client for Payment' . $timestampDisplay . '</p>'; // Changed text & color
+    // echo '<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> '; // Changed color
+    // echo '<span class="badge" style="background:#28a745;color:#fff;">Received by </span>' . $CENRO_Office . ' Client for Payment' . $timestampDisplay . '</p>'; // Changed text & color
 
 
 } else if ($row['Title'] == 'FUU' && strpos($row['Details'], 'On-site validation was successfully conducted.') !== false) {
