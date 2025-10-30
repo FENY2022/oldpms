@@ -671,8 +671,6 @@ if ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been
                             }
 
 
-
-
                                     
                                   }
 ?>                                  
