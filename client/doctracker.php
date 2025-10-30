@@ -289,6 +289,28 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
                                       echo   '</div>';
                                       echo   '</li>' ;
 
+
+    } elseif (($row['Title']) == ('Application successfully submitted subject for evaluation.')) {
+
+    // condition
+    echo '<li style="background: #fff;">';
+    echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+    echo '<div class="content">';
+    echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $CENRO_Office . ' FUU - ' . $row['Title'] . '</h5>';
+
+    echo '<p style="color: #222">';
+    echo  ' ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600;"></a>';
+
+    
+
+
+
+    echo '</p>';
+    echo '</div>';
+    echo '</li>';
+
+
+
   } elseif (($row['Title']) == ('Credit  Officer')) {
 
     // condition
@@ -380,18 +402,19 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
                           echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
                         
                           echo '<p style="color: #222">';
-                            echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-                            echo '<a class="btn btn-rounded btn-warning" href="docstatus_released.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-file"></i> Open Document</a> &nbsp; &nbsp;';
+                          echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+                          echo '<a class="btn btn-rounded btn-warning" href="docstatus_released.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-file"></i> Open Document</a> &nbsp; &nbsp;';
                           echo '</p>';
                           echo '</div>';
                           echo '</li>';
 
+
+      
+
   
 
                         
-            
-
-
+        
 
 
               }  else{
