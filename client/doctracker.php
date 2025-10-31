@@ -52,8 +52,7 @@ if (isset($_GET['lumber_app_id'])) {
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
  
     <link href="css/custom_styles.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="../main/css/sb-admin-2.css"> -->
-  </head>
+    </head>
   
 <body style="background: #ecedf0;">
 <div class="spinner-wrapper">
@@ -74,8 +73,7 @@ if (isset($_GET['lumber_app_id'])) {
               </div>
             </nav>
 
-        <!-- Sidebar -->
-    <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
+        <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
   <ul class="nav sidebar-nav">
        <div class="sidebar-header">
        <div class="sidebar-brand">
@@ -83,8 +81,7 @@ if (isset($_GET['lumber_app_id'])) {
         <li><a href="dashboard_requirement.php">Home</a></li>
         <li><a href="dashboard_requirement.php">Requirements</a></li>
        <li><a href="dashboard_doclist.php">Document Status</a></li>
-      <!--  <li><a href="doctracker.php" style="font-size: 15px;">Track your Application</a></li> -->
-       <li style="padding-left: 30px;"><i style="color: white;" class="fa-solid fa-right-from-bracket"></i><button style="color: white;" class="btn"  name="btn" data-target="#logoutModal" data-toggle="modal">Logout</button></li><br><br>
+      <li style="padding-left: 30px;"><i style="color: white;" class="fa-solid fa-right-from-bracket"></i><button style="color: white;" class="btn"  name="btn" data-target="#logoutModal" data-toggle="modal">Logout</button></li><br><br>
      </ul><br><br>
    </form>
 <div id='bodybox'>
@@ -110,7 +107,6 @@ if (isset($_GET['lumber_app_id'])) {
 </div>
 
 </nav>
-        <!-- Page Content -->
         <div id="page-content-wrapper">
             <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
                 <span class="hamb-top"></span>
@@ -120,17 +116,12 @@ if (isset($_GET['lumber_app_id'])) {
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                      <!-- START -->
-
-                      <!-- CONTENT -->
-                              <!-- END -->
-                    </div>
+                      </div>
                 </div>
             </div>
             
         </div>
-        <!-- /#page-content-wrapper -->
-    </div>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <input type="file" id="realfile"  hidden="hidden" accept="Application/pdf" value=""/>
@@ -140,13 +131,7 @@ if (isset($_GET['lumber_app_id'])) {
     <input type="file" id="realfile5" hidden="hidden" accept="Application/pdf" value=""/>
     <input type="file" id="realfile6" hidden="hidden" accept="Application/pdf" value=""/>
 
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    -->
-
-
-<?php
+    <?php
 
 if ( isset($_POST['submit1'])) {
 
@@ -435,6 +420,55 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
                               
 
 
+// --- 1. DEFINE "RECEIVED" STATUS ---
+// Create a timestamp for the "Received" event
+$rcvdTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
+$rcvdFormattedDate = date('F j, Y', $rcvdTimestamp);
+// Use the *actual* time for "Received"
+$rcvdActualTime = date('h:i A', strtotime($row['Time'])); 
+
+// Create the timestamp display string
+$rcvdTimestampDisplay = '<span style="font-size: 12px; color: #ffffffff;">' .
+                            '<i class="fa-regular fa-clock" style="margin-right: 4px; font-size: 11px;"></i>' .
+                            $rcvdFormattedDate . ' at ' . $rcvdActualTime .
+                        '</span>';
+
+$receivedBadge = '<span class="badge" style="background:#28a745;color:#fff;">Received </span>'; // Green badge
+$receivedByText = '';
+
+// Define titles that are *not* receiving offices (e.g., client actions)
+$excludedTitles = ['Client', 'On Site Validation Schedule', '']; 
+
+// Check if this is the very first "forwarding" step
+$isInitialForward = ($row['Title'] == 'FUU' && strpos($row['Details'], 'Your application has been evaluated and officially received.') !== false);
+
+// We show "Received" if the Title is a valid office and it's NOT that initial forwarding step
+if (!in_array($row['Title'], $excludedTitles) && !$isInitialForward) {
+    // Use the Title as the receiving entity
+    $receivedByText = 'by ' . $row['Title'];
+}
+
+// --- 2. DISPLAY "RECEIVED" UI ---
+// Only print this HTML if we have a valid "Received By" text
+if (!empty($receivedByText)) {
+    echo '<div class="status-item" style="line-height: 1.5; margin-bottom: 12px;">';
+    
+    // Line 1: Main Status (Icon, Badge, Text)
+    echo '<div style="font-size: 14px; color: #333; display: flex; align-items: flex-start;">' .
+            '<i class="fa-solid fa-inbox" style="color: #28a745; margin-right: 6px; font-size: 16px; margin-top: 2px;"></i>' . // Inbox icon
+            '<div style="flex-grow: 1;">' . // Wrapper for text
+                $receivedBadge . ' ' . $receivedByText .
+            '</div>' .
+         '</div>';
+
+    // Line 2: Timestamp
+    echo '<div style="margin-left: 22px; padding-top: 2px;">' . $rcvdTimestampDisplay . '</div>'; 
+    
+    echo '</div>'; // End container
+}
+
+// --- 3. EXISTING "FORWARDED" LOGIC (This part is already in your file) ---
+
 $fullTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
 $formattedDate = date('F j, Y', $fullTimestamp);
 $adjustedTime = date('h:i A', strtotime($row['Time'] . ' +1 minutes'));
@@ -564,20 +598,10 @@ $timestampDisplay = ' <span style="font-size: 12px; color: #888;">' . $formatted
                               </div>
 
     </div>
-      <script src="js/jquery.min.js"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
-    <script src="js/popper.min.js"></script> <!-- Popper tooltip library for Bootstrap -->
-    <script src="js/bootstrap.min.js"></script> <!-- Bootstrap framework -->
-    <script src="js/jquery.easing.min.js"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
-    <script src="js/swiper.min.js"></script> <!-- Swiper for image and text sliders -->
-    <script src="js/jquery.magnific-popup.js"></script> <!-- Magnific Popup for lightboxes -->
-    <script src="js/validator.min.js"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
-    <script src="js/scripts.js"></script> <!-- Custom scripts -->
-  </body>
+      <script src="js/jquery.min.js"></script> <script src="js/popper.min.js"></script> <script src="js/bootstrap.min.js"></script> <script src="js/jquery.easing.min.js"></script> <script src="js/swiper.min.js"></script> <script src="js/jquery.magnific-popup.js"></script> <script src="js/validator.min.js"></script> <script src="js/scripts.js"></script> </body>
 </html>
 
 
-
-<!-- where Flow_stat >= $l_id  -->
 
 <?php 
 include "trackercheckpoint.php";
