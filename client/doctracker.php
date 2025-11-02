@@ -5,8 +5,6 @@ $l_id = $_GET['lumber_app_id'];
 
 
 
-       
-
 ?>
 
 <?php
@@ -50,10 +48,10 @@ if (isset($_GET['lumber_app_id'])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
- 
+
     <link href="css/custom_styles.css" rel="stylesheet">
     </head>
-  
+ 
 <body style="background: #ecedf0;">
 <div class="spinner-wrapper">
         <div class="spinner">
@@ -64,14 +62,14 @@ if (isset($_GET['lumber_app_id'])) {
     </div>
   <form action="../processphp/prc_logout.php"  method="post" role="form" >
   <div id="wrapper">
-             <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding: 5px;"> 
-              <div class="container-fluid">
-                <a href="index.php"><img src="../images/oldpmslogo.png" alt="oldpms" height="40"></a>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <a class="navbar-brand" href="#"><strong>ONLINE LUMBER DEALER PERMITTING & MONITORING SYSTEM</strong></a>
-                </div>
+           <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding: 5px;"> 
+            <div class="container-fluid">
+              <a href="index.php"><img src="../images/oldpmslogo.png" alt="oldpms" height="40"></a>
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+              <a class="navbar-brand" href="#"><strong>ONLINE LUMBER DEALER PERMITTING & MONITORING SYSTEM</strong></a>
               </div>
-            </nav>
+            </div>
+          </nav>
 
         <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
   <ul class="nav sidebar-nav">
@@ -161,7 +159,7 @@ $l_id = $_GET['lumber_app_id'];
   function function_alert($message) {
       
     // Display the alert box 
-	echo "<script type='text/javascript'>alert('Your site visit schedule has been affirmed for site validation.');location='dashboard_doclist.php';</script>";
+    echo "<script type='text/javascript'>alert('Your site visit schedule has been affirmed for site validation.');location='dashboard_doclist.php';</script>";
 }
   
   
@@ -179,20 +177,20 @@ function_alert("Your site visit schedule has been affirmed for site validation."
 
 
 
-                              <div class="bodytime">
-                                <div class="timeline">
-                                   <p style="font-size: 30px; font-weight: 600; color: #222222;"><i class="fa-solid fa-file"></i> Application Status</p>
-                                   <div class="scroll-bg">
+                          <div class="bodytime">
+                            <div class="timeline">
+                                  <p style="font-size: 30px; font-weight: 600; color: #222222;"><i class="fa-solid fa-file"></i> Application Status</p>
+                                  <div class="scroll-bg">
                                     <div class="scroll-div"style="padding: 10px; width: 780px; height: 800px; overflow: hidden; overflow-y: scroll;">
-                                    <div class="scroll-object">
-                                     <ul>
+                                      <div class="scroll-object">
+                                        <ul>
 <?php 
 
 
 function getFullMonthNameFromDate($date){
   $monthName = date('F d, Y', strtotime($date));
   return $monthName;
-       }
+        }
 
 
 
@@ -220,13 +218,12 @@ function checkForUpdates() {
 
 setInterval(checkForUpdates, 5000); // Check every 5 seconds
 </script>";
-           while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
-         
+          while ( $row = $stmt->fetch(PDO::FETCH_ASSOC) ) {
+        
 
 
-
-            $date = $row['Date'];
-           getFullMonthNameFromDate($date);
+          $date = $row['Date'];
+          getFullMonthNameFromDate($date);
 
 
 
@@ -238,186 +235,222 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
             $row['Title'] = 'CENR Officer/Head DENR Satellite Office';
         }   
 
-          if (stripos($row['Details'], 'CENRO') !== false || stripos($row['Details'], 'Cenro') !== false) {
-              $row['Details'] = str_replace(['CENRO', 'Cenro'], 'CENR Officer/Head DENR Satellite Office', $row['Details']);
-          }     
+         if (stripos($row['Details'], 'CENRO') !== false || stripos($row['Details'], 'Cenro') !== false) {
+             $row['Details'] = str_replace(['CENRO', 'Cenro'], 'CENR Officer/Head DENR Satellite Office', $row['Details']);
+         }    
 
-          
+         
 
-        if (strtotime($row['Time']) !== false) {
-            $row['Time'] = date('h:i A', strtotime($row['Time']));
-        }     
-        
-        
+         if (strtotime($row['Time']) !== false) {
+             $row['Time'] = date('h:i A', strtotime($row['Time']));
+         }    
+         
+         
 
-                                    if (($row['Title']) == ('On Site Validation Schedule')){
+                           if (($row['Title']) == ('On Site Validation Schedule')){
 
 // condition
-                                      echo   '<li style="background: #fff;">' ;
-                                      echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
-                                      echo   '<div class="content">' ;
-                                      echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
-          
-                                      echo   '<p style="color: #222">';
-                                      echo   '  '.$row['Details'].'<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-                                     
-                                      if (('YES') == ($row['Action_'])){
-                                      echo   '<form method="POST"><button   class="btn btn-rounded btn-success disabled" name="submit1" >Yes</button> &nbsp; &nbsp;'; 
-                                      echo   '<button   class="btn btn-rounded btn-warning disabled" >No</button> </form>';
-                                                                        }
-                                      else 
-                                      {
-                                        echo   '<form method="POST"><button  class="btn btn-rounded btn-success" name="submit1" >Yes</button> &nbsp; &nbsp;'; 
-                                        echo   '<button  class="btn btn-rounded btn-warning" >No</button> </form>';
-                                      }
-                                      echo   '  </p>';
-                                      echo   '</div>';
-                                      echo   '</li>' ;
+                                 echo   '<li style="background: #fff;">' ;
+                                 echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
+                                 echo   '<div class="content">' ;
+                                 echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
+         
+                                 echo   '<p style="color: #222">';
+                                 echo   '   '.$row['Details'].'<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+                                
+                                 if (('YES') == ($row['Action_'])){
+                                 echo   '<form method="POST"><button   class="btn btn-rounded btn-success disabled" name="submit1" >Yes</button> &nbsp; &nbsp;'; 
+                                 echo   '<button   class="btn btn-rounded btn-warning disabled" >No</button> </form>';
+                                                                 }
+                                 else 
+                                 {
+                                   echo   '<form method="POST"><button   class="btn btn-rounded btn-success" name="submit1" >Yes</button> &nbsp; &nbsp;'; 
+                                   echo   '<button   class="btn btn-rounded btn-warning" >No</button> </form>';
+                                 }
+                                 echo   '   </p>';
+                                 echo   '</div>';
+                                 echo   '</li>' ;
 
 
-    } elseif (($row['Title']) == ('Application successfully submitted subject for evaluation.')) {
+   } elseif (($row['Title']) == ('Application successfully submitted subject for evaluation.')) {
 
-            // Condition
-            echo '<li style="background: #fff;">';
-            echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-            echo '<div class="content">';
-            echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $CENRO_Office . ' FUU - ' . $row['Title'] . '</h5>';
-            echo '<p style="color: #222">';
-            echo  ' ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600;"></a>';
-            echo '</p>';
-            echo '</div>';
-            echo '</li>';
-
-
-
-  } elseif (($row['Title']) == ('Credit  Officer')) {
-
-    // condition
-    echo '<li style="background: #fff;">';
-    echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-    echo '<div class="content">';
-    echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
-
-    echo '<p style="color: #222">';
-    echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-    // echo '<a  class="btn btn-rounded btn-warning"     href="clientpayment.php?lumber_app_id='.$l_id.'"   target="_blank"  name="submit1" >Pay Here</a> &nbsp; &nbsp;';
-    echo '<a  class="btn btn-rounded btn-warning"     href="forlbpiq.php?lumber_app_id='.$l_id.'"   target="_blank"  name="submit1" >Pay Here</a> &nbsp; &nbsp;';
-    
+           // Condition
+           echo '<li style="background: #fff;">';
+           echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+           echo '<div class="content">';
+           echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $CENRO_Office . ' FUU - ' . $row['Title'] . '</h5>';
+           echo '<p style="color: #222">';
+           echo    ' ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600;"></a>';
+           echo '</p>';
+           echo '</div>';
+           echo '</li>';
 
 
 
-    echo '</p>';
-    echo '</div>';
-    echo '</li>';
+   } elseif (($row['Title']) == ('Credit  Officer')) {
 
+   // condition
+   echo '<li style="background: #fff;">';
+   echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+   echo '<div class="content">';
+   echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
 
-      } elseif (($row['Details']) == ('Successfully Paid')) {
-
-    // condition
-    echo '<li style="background: #fff;">';
-    echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-    echo '<div class="content">';
-    echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . 'Client Successfully Paid'. '</h5>';
-
-    echo '<p style="color: #222">';
-    echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-    echo '<a  class="btn btn-rounded btn-success"     href="clientpayment.php?lumber_app_id='.$l_id.'"    name="submit1" >View</a> &nbsp; &nbsp;';
+   echo '<p style="color: #222">';
+   echo '   ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+   // echo '<a  class="btn btn-rounded btn-warning"     href="clientpayment.php?lumber_app_id='.$l_id.'"   target="_blank"   name="submit1" >Pay Here</a> &nbsp; &nbsp;';
+   echo '<a  class="btn btn-rounded btn-warning"     href="forlbpiq.php?lumber_app_id='.$l_id.'"   target="_blank"   name="submit1" >Pay Here</a> &nbsp; &nbsp;';
+   
 
 
 
-    echo '  </p>';
-    echo '</div>';
-    echo '</li>';
+   echo '</p>';
+   echo '</div>';
+   echo '</li>';
+
+
+     } elseif (($row['Details']) == ('Successfully Paid')) {
+
+   // condition
+   echo '<li style="background: #fff;">';
+   echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+   echo '<div class="content">';
+   echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . 'Client Successfully Paid'. '</h5>';
+
+   echo '<p style="color: #222">';
+   echo '   ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+   echo '<a  class="btn btn-rounded btn-success"    href="clientpayment.php?lumber_app_id='.$l_id.'"    name="submit1" >View</a> &nbsp; &nbsp;';
 
 
 
-
-          }elseif (($row['Title']) == ('Client')) {
-
-              // condition
-              echo '<li style="background: #fff;">';
-              echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-              echo '<div class="content">';
-              echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
-          
-              echo '<p style="color: #222">';
-              echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-              echo '<a class="btn btn-rounded btn-success" href="css_2025/css_2025.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-star"></i> Click here for CSS</a> &nbsp; &nbsp;';
-              echo '  </p>';
-              echo '</div>';
-              echo '</li>';
-          
+   echo '   </p>';
+   echo '</div>';
+   echo '</li>';
 
 
 
 
+         }elseif (($row['Title']) == ('Client')) {
+
+             // condition
+             echo '<li style="background: #fff;">';
+             echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+             echo '<div class="content">';
+             echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
+         
+             echo '<p style="color: #222">';
+             echo '   ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+             echo '<a class="btn btn-rounded btn-success" href="css_2025/css_2025.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-star"></i> Click here for CSS</a> &nbsp; &nbsp;';
+             echo '   </p>';
+             echo '</div>';
+             echo '</li>';
+         
 
 
-                        }elseif (($row['Title']) == ('Client')) {
-
-                        // condition
-                        echo '<li style="background: #fff;">';
-                        echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-                        echo '<div class="content">';
-                        echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
-                    
-                        echo '<p style="color: #222">';
-                        echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-                        echo '<a  class="btn btn-rounded btn-success"  href="clientcss_s.php?lumber_app_id='.$l_id.'" target="_blank"  name="submit1" >Click here for CSS</a> &nbsp; &nbsp;';
-                    
-                          
-                    
-                        echo '  </p>';
-                        echo '</div>';
-                        echo '</li>';
 
 
-                        
-                        }elseif (strpos($row['Details'], 'Accomplished Client Satisfaction Survey (CSS)') !== false) {
-                          // condition for Accomplished Client Satisfaction Survey (CSS)
-                          echo '<li style="background: #fff;">';
-                          echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
-                          echo '<div class="content">';
-                          echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
-                        
-                          echo '<p style="color: #222">';
-                          echo '  ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-                          echo '<a class="btn btn-rounded btn-warning" href="docstatus_released.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-file"></i> Open Document</a> &nbsp; &nbsp;';
-                          echo '</p>';
-                          echo '</div>';
-                          echo '</li>';
 
 
-      
+                 }elseif (($row['Title']) == ('Client')) {
 
-  
+                 // condition
+                 echo '<li style="background: #fff;">';
+                 echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+                 echo '<div class="content">';
+                 echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
+             
+                 echo '<p style="color: #222">';
+                 echo '   ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+                 echo '<a  class="btn btn-rounded btn-success"  href="clientcss_s.php?lumber_app_id='.$l_id.'" target="_blank"  name="submit1" >Click here for CSS</a> &nbsp; &nbsp;';
+             
+                 
+             
+                 echo '   </p>';
+                 echo '</div>';
+                 echo '</li>';
 
-                        
-        
+
+                 
+                 }elseif (strpos($row['Details'], 'Accomplished Client Satisfaction Survey (CSS)') !== false) {
+                   // condition for Accomplished Client Satisfaction Survey (CSS)
+                   echo '<li style="background: #fff;">';
+                   echo '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>' . getFullMonthNameFromDate($date) . '</span><br>';
+                   echo '<div class="content">';
+                   echo '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>' . $row['Time'] . '</p><h5 style="color: #222; font-weight: 600;">' . $row['Title'] . '</h5>';
+                 
+                   echo '<p style="color: #222">';
+                   echo '   ' . $row['Details'] . '<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+                   echo '<a class="btn btn-rounded btn-warning" href="docstatus_released.php?lumber_app_id='.$l_id.'" target="_blank" name="submit1"><i class="fa-solid fa-file"></i> Open Document</a> &nbsp; &nbsp;';
+                   echo '</p>';
+                   echo '</div>';
+                   echo '</li>';
 
 
-              }  else{
+     
+
+ 
+
+                 
+         
+
+          }  else{
 // main
 
 
 
 
 
-                              echo   '<br>';
-                              echo   '<li style="background: #fff;">' ;
-                              echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
-                              echo   '<div class="content">' ;
-                              echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
-                              echo   '<br>' ;
+                               echo   '<br>';
+                               echo   '<li style="background: #fff;">' ;
+                               echo   '<span style="background: #0d6efd;" id="latestTime"><i class="fa-regular fa-calendar"></i>'.getFullMonthNameFromDate($date).'</span><br>';
+                               echo   '<div class="content">' ;
+                               echo   '<p style="font-size: 12px; margin-left: 2px; color: #888;"><i class="fa-regular fa-clock"></i>'.$row['Time'].'</p><h5 style="color: #222; font-weight: 600;">'.$row['Title'].'</h5>' ;
+                               echo   '<br>' ;
 
 
 
 
-                              echo   '<p style="color: #222">';
-                              echo   '  '.$row['Details'].'<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
-                              echo   '  </p>';
+                               echo   '<p style="color: #222">';
+                               echo   '   '.$row['Details'].'<br><br><a href="#" style="text-decoration: none; color: #0d6efd; font-weight: 600; "></a>';
+                               echo   '   </p>';
 
-                              
+                               
+// --- START: NEW "RETURNED" LOGIC ---
+
+// 1. Define the condition (case-insensitive check on Title and Details)
+$isReturned = (stripos($row['Title'], 'return') !== false || stripos($row['Details'], 'return to') !== false);
+
+if ($isReturned) {
+    // 2. Define Badge and Timestamp (use the *actual* time)
+    $rtnTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
+    $rtnFormattedDate = date('F j, Y', $rtnTimestamp);
+    // Note: $row['Time'] is already formatted as h:i A from your logic above
+    $rtnActualTime = $row['Time']; 
+
+    $rtnTimestampDisplay = '<span style="font-size: 12px; color: #ffffffff;">' . // White text to match others
+                            '<i class="fa-regular fa-clock" style="margin-right: 4px; font-size: 11px;"></i>' .
+                            $rtnFormattedDate . ' at ' . date('h:i A', strtotime($rtnActualTime . ' +2 minutes')) .
+                           '</span>';
+
+    $returnedBadge = '<span class="badge" style="background:#dc3545;color:#fff;">Returned </span>'; // Bootstrap danger red
+
+    // 3. Display the UI
+    echo '<div class="status-item" style="line-height: 1.5; margin-bottom: 12px;">';
+    
+    // Line 1: Main Status (Icon, Badge, Text)
+    echo '<div style="font-size: 14px; color: #333; display: flex; align-items: flex-start;">' .
+            '<i class="fa-solid fa-undo" style="color: #dc3545; margin-right: 6px; font-size: 16px; margin-top: 2px;"></i>' . // Return icon
+            '<div style="flex-grow: 1;">' . // Wrapper for text
+                $returnedBadge . 
+            '</div>' .
+         '</div>';
+
+    // Line 2: Timestamp
+    echo '<div style="margin-left: 22px; padding-top: 2px;">' . $rtnTimestampDisplay . '</div>'; 
+    
+    echo '</div>'; // End container
+}
+
+// --- END: NEW "RETURNED" LOGIC ---
 
 
 // --- 1. DEFINE "RECEIVED" STATUS ---
@@ -425,12 +458,12 @@ setInterval(checkForUpdates, 5000); // Check every 5 seconds
 $rcvdTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
 $rcvdFormattedDate = date('F j, Y', $rcvdTimestamp);
 // Use the *actual* time for "Received"
-$rcvdActualTime = date('h:i A', strtotime($row['Time'])); 
+$rcvdActualTime = date('h:i A', strtotime($row['Time'] . ' +0 minutes'));
 
 // Create the timestamp display string
 $rcvdTimestampDisplay = '<span style="font-size: 12px; color: #ffffffff;">' .
-                            '<i class="fa-regular fa-clock" style="margin-right: 4px; font-size: 11px;"></i>' .
-                            $rcvdFormattedDate . ' at ' . $rcvdActualTime .
+                          '<i class="fa-regular fa-clock" style="margin-right: 4px; font-size: 11px;"></i>' .
+                          $rcvdFormattedDate . ' at ' . $rcvdActualTime .
                         '</span>';
 
 $receivedBadge = '<span class="badge" style="background:#28a745;color:#fff;">Received </span>'; // Green badge
@@ -554,10 +587,10 @@ if (!empty($destinationText)) {
 
 
 
-                              echo   '</div>';
+                               echo   '</div>';
 
 
-                              echo   '</li>' ;
+                               echo   '</li>' ;
 
 
 // 1. Create a single timestamp from your date and time fields
@@ -568,7 +601,7 @@ $fullTimestamp = strtotime($row['Date'] . ' ' . $row['Time']);
 $formattedDate = date('F j, Y', $fullTimestamp);
 
 // 3. Calculate the adjusted time as you requested
-$adjustedTime = date('h:i A', strtotime($row['Time'] . ' -1 minutes'));
+$adjustedTime = date('h:i A', strtotime($row['Time'] . ' -3 minutes'));
 
 
 // 4. Create the final string to display.
@@ -582,15 +615,15 @@ $timestampDisplay = ' <span style="font-size: 12px; color: #888;">' . $formatted
 
 
 
-                            }
+                             }
 
 
-                                    
-                                  }
-?>                                  
+                                 
+                               }
+?>                                        
                                         </div>
                                       </li>
-                                         </ul>
+                                        </ul>
                                       </div>
                                     </div>
                                   </div>
@@ -598,7 +631,7 @@ $timestampDisplay = ' <span style="font-size: 12px; color: #888;">' . $formatted
                               </div>
 
     </div>
-      <script src="js/jquery.min.js"></script> <script src="js/popper.min.js"></script> <script src="js/bootstrap.min.js"></script> <script src="js/jquery.easing.min.js"></script> <script src="js/swiper.min.js"></script> <script src="js/jquery.magnific-popup.js"></script> <script src="js/validator.min.js"></script> <script src="js/scripts.js"></script> </body>
+    <script src="js/jquery.min.js"></script> <script src="js/popper.min.js"></script> <script src="js/bootstrap.min.js"></script> <script src="js/jquery.easing.min.js"></script> <script src="js/swiper.min.js"></script> <script src="js/jquery.magnific-popup.js"></script> <script src="js/validator.min.js"></script> <script src="js/scripts.js"></script> </body>
 </html>
 
 
