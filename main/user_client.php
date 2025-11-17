@@ -383,10 +383,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
                             <h2>Client Management</h2>
                             <p>Manage and view all registered clients in the system</p>
                         </div>
-                        <button class="btn btn-light rounded-pill px-4 shadow-sm" onclick="triggerPDFExport()">
-                            <i class="fas fa-file-pdf me-2"></i> Export to PDF
-                        </button>
-                    </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light rounded-pill px-4 shadow-sm" onclick="triggerExcelExport()">
+                                <i class="fas fa-file-excel me-2 text-success"></i> Export to Excel
+                            </button>
+                            <button class="btn btn-light rounded-pill px-4 shadow-sm" onclick="triggerPDFExport()">
+                                <i class="fas fa-file-pdf me-2 text-danger"></i> Export to PDF
+                            </button>
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -529,6 +534,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <script>
         // Initialize DataTables
         $(document).ready(function() {
@@ -576,6 +583,56 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             }
         }
         
+        // --- === ADDED: NEW EXCEL EXPORT FUNCTION === ---
+        function triggerExcelExport() {
+            // Get the DataTables API instance
+            const table = $('#clientTable').DataTable();
+            
+            // Define the headers for the Excel file
+            const headers = ['Client ID', 'Name', 'Email', 'Contact', 'Location', 'Status'];
+            
+            // Create an array to hold the data
+            const body = [];
+            
+            // Get data from ALL rows that match the current search filter
+            table.rows({ search: 'applied' }).nodes().each(function() {
+                const row = $(this);
+                // Create a clean object for SheetJS
+                const rowData = {
+                    'Client ID': row.find('td:eq(0) small').text().replace('ID: ', ''),
+                    'Name': row.find('td:eq(0) .fw-semibold').text().trim(),
+                    'Email': row.find('td:eq(1) .fw-medium').text().trim(),
+                    'Contact': row.find('td:eq(1) small').text().trim(),
+                    'Location': row.find('td:eq(2)').text().trim(),
+                    'Status': row.find('td:eq(3) span').text().trim()
+                };
+                body.push(rowData);
+            });
+
+            // Create a new worksheet from the JSON data (array of objects)
+            const ws = XLSX.utils.json_to_sheet(body, { header: headers });
+            
+            // Optional: Set column widths for a cleaner look
+            ws['!cols'] = [
+                { wch: 10 }, // Client ID
+                { wch: 30 }, // Name
+                { wch: 30 }, // Email
+                { wch: 15 }, // Contact
+                { wch: 40 }, // Location
+                { wch: 10 }  // Status
+            ];
+            
+            // Create a new workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Client Report");
+
+            // Trigger the download
+            XLSX.writeFile(wb, "DENR_Client_Report.xlsx");
+        }
+
+        
         // --- PDF Generation Functions (ADJUSTED FOR NEW TABLE STRUCTURE) ---
         
         // 1. Print ALL data to PDF (using jsPDF for client-side)
@@ -595,10 +652,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             
             const headers = ['Client ID', 'Name', 'Email', 'Contact', 'Location', 'Status'];
             
-            // Get data from visible rows
+            // Get data from all rows (not just the current page)
             const body = [];
-            // Get data from DataTables API to ensure only currently visible/filtered data is used
-            $('#clientTable').DataTable().rows({ search: 'applied', page: 'current' }).nodes().each(function() {
+            
+            $('#clientTable').DataTable().rows({ search: 'applied' }).nodes().each(function() {
                 const row = $(this);
                 const rowData = [
                     row.find('td:eq(0) small').text().replace('ID: ', ''), // Client ID
@@ -624,7 +681,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
                 margin: { top: 40 }
             });
 
-            doc.save('DENR_Client_Report.pdf');
+            // Opens the PDF in a new tab instead of downloading
+            doc.output('dataurlnewwindow');
         }
 
         // 2. Print SINGLE client data to PDF
@@ -682,8 +740,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
                     fontSize: 11
                 }
             });
-
-            doc.save(`${clientName.replace(/ /g, '_')}_Details.pdf`);
+            
+            // Opens the PDF in a new tab instead of downloading
+            doc.output('dataurlnewwindow');
         }
     </script>
 </body>
