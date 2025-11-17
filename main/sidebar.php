@@ -59,7 +59,6 @@ $stmt->close();
 ?>
 
 
-
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: #22782c">
@@ -117,6 +116,11 @@ $stmt->close();
                         echo '<li><a href="fus.php"><i class="fas fa-fw fa-home text-white"></i> Dashboard </a></li>';
                     }
                     ?>
+                    
+                    <!-- NEW LINK ADDED HERE for Client Management -->
+                    <li><a href="user_client.php"><i class="fas fa-fw fa-users text-white"></i> Manage Clients </a></li>
+                    <!-- END NEW LINK -->
+
 
                     <?php
                     // Initialize the returned count for lumber applications
