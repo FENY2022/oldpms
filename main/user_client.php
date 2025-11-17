@@ -75,11 +75,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
     // header('Content-Disposition: attachment; filename="client_report.pdf"');
     // exit; // Real PDF generation logic goes here
 }
-
-// Include your sidebar and header here (assuming this structure)
-// require_once('sidebar.php'); 
-// require_once('header.php');
-
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +100,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             --denr-dark-green: #1a5c22;
         }
         body {
-            background-color: #f8f9fa;
+            /* Changed background to white for modal content clarity */
+            background-color: #ffffff; 
+            padding: 10px; /* Add slight padding inside the iframe */
         }
         .card {
             border: none;
@@ -142,17 +139,29 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        /* REMOVING Layout styles that were used for the full-page view */
+        .main_container, .right_col, .container-fluid.main-content {
+            /* Overriding old layout specific styles */
+            margin-left: 0 !important; 
+            padding: 0 !important;
+            display: block !important;
+        }
+        .container-fluid {
+             padding-top: 10px !important; 
+        }
+        
     </style>
 </head>
 
 <body>
-    <!-- Assuming your main content area structure starts here -->
-    <div class="container-fluid" style="padding-top: 20px;">
+    <!-- Main content container (no layout wrappers needed) -->
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="table-header-bg d-flex justify-content-between align-items-center">
-                        <h2 class="text-white mb-0"><i class="fas fa-users-cog me-2"></i> Client User Management</h2>
+                        <!-- Changed h2 to h4 for better sizing inside the iframe/modal -->
+                        <h4 class="text-white mb-0">Client Records Table</h4> 
                         <button class="btn btn-outline-light rounded-pill" onclick="triggerPDFExport()">
                             <i class="fas fa-file-pdf me-2"></i> Export All to PDF
                         </button>
@@ -163,11 +172,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
                         <!-- Search and Action Bar (Using the standard DataTables search is better) -->
                         <div class="search-action-bar d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0 text-secondary">Registered Clients (<?= count($client_data) ?>)</h5>
-                            <!-- DataTables handles search, so we just provide a placeholder for manual search if needed -->
-                            <!-- <form method="GET" class="d-flex">
-                                <input type="text" name="search" class="form-control me-2 rounded-pill" placeholder="Search by Name or Address..." value="<?= htmlspecialchars($search_query) ?>">
-                                <button type="submit" class="btn btn-outline-primary rounded-pill"><i class="fas fa-search"></i></button>
-                            </form> -->
                         </div>
 
                         <!-- Data Table -->
@@ -228,7 +232,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             </div>
         </div>
     </div>
-    <!-- /container-fluid -->
+    <!-- End main content container -->
 
     <!-- Bootstrap and jQuery (DataTables dependency) JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -263,13 +267,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
         // --- Action Functions (Placeholders) ---
 
         function editClient(clientId) {
-            // In a real application, this would redirect or open a modal for editing
+            // Note: window.alert() is used here as a direct placeholder for quick feedback, 
+            // but should be replaced by a proper UI modal in a production environment.
             alert(`Redirecting to edit page for Client ID: ${clientId}`);
             // window.location.href = `edit_client.php?id=${clientId}`; 
         }
 
         function deleteClient(clientId, clientName) {
-            // Use a custom modal in a full app, but alert is used here as a placeholder
+            // Note: window.confirm() is used here as a direct placeholder for quick feedback, 
+            // but should be replaced by a proper UI modal in a production environment.
             if (confirm(`Are you sure you want to delete client: ${clientName} (ID: ${clientId})?`)) {
                 alert(`Client ID: ${clientId} (${clientName}) deleted successfully (simulated).`);
                 // In a real application, you would make an AJAX call to delete_client.php
@@ -334,6 +340,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'pdf') {
             });
 
             if (row.length === 0) {
+                // Note: window.alert() is used here as a direct placeholder for quick feedback, 
+                // but should be replaced by a proper UI modal in a production environment.
                 alert("Client data not found for PDF generation.");
                 return;
             }
