@@ -59,7 +59,6 @@ $stmt->close();
 ?>
 
 
-
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: #22782c">
@@ -117,7 +116,8 @@ $stmt->close();
                         echo '<li><a href="fus.php"><i class="fas fa-fw fa-home text-white"></i> Dashboard </a></li>';
                     }
                     ?>
-
+                    
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#clientModal"><i class="fas fa-fw fa-users text-white"></i> Manage Clients </a></li>
                     <?php
                     // Initialize the returned count for lumber applications
                     $returnedCount = 0;
@@ -182,9 +182,7 @@ $stmt->close();
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="background-color: transparent; border: none; outline: none; box-shadow: none;"></button>
       </div>
-      <div class="modal-body p-4 bg-light" style="height: 80vh;"> <!-- Adjusted height -->
-        <div class="ratio ratio-16x9" style="--bs-aspect-ratio: 65%; height: 100%;"> <!-- Ensures iframe takes full height -->
-          <iframe src="analysis.php" class="rounded-3 shadow-sm" title="Analysis Dashboard" allowfullscreen></iframe>
+      <div class="modal-body p-4 bg-light" style="height: 80vh;"> <div class="ratio ratio-16x9" style="--bs-aspect-ratio: 65%; height: 100%;"> <iframe src="analysis.php" class="rounded-3 shadow-sm" title="Analysis Dashboard" allowfullscreen></iframe>
         </div>
         <p class="text-muted text-center mt-3 mb-0">
           <small>Data refreshed daily. For detailed insights, view in full screen.</small>
@@ -195,6 +193,35 @@ $stmt->close();
           <i class="fas fa-times me-1"></i> Close
         </button>
         <a href="analysis.php" target="_blank" class="btn btn-primary rounded-pill">
+          <i class="fas fa-expand me-1"></i> Full Screen View
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-gradient-primary text-white p-3 border-bottom-0">
+        <h5 class="modal-title fs-5 fw-bold" id="clientModalLabel">
+          <i class="fas fa-users me-2"></i> Client Management
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="background-color: transparent; border: none; outline: none; box-shadow: none;"></button>
+      </div>
+      <div class="modal-body p-2 bg-light" style="height: 90vh;">
+        <div class="ratio ratio-16x9" style="--bs-aspect-ratio: 100%; height: 100%;">
+          <iframe src="user_client.php" class="rounded-3 shadow-sm" title="Client Management" allowfullscreen></iframe>
+        </div>
+        <p class="text-muted text-center mt-3 mb-0">
+          <small>This view provides real-time management of registered clients.</small>
+        </p>
+      </div>
+      <div class="modal-footer d-flex justify-content-end align-items-center bg-white p-3 border-top-0">
+        <button type="button" class="btn btn-outline-secondary me-2 rounded-pill" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i> Close
+        </button>
+        <a href="user_client.php" target="_blank" class="btn btn-primary rounded-pill">
           <i class="fas fa-expand me-1"></i> Full Screen View
         </a>
       </div>
