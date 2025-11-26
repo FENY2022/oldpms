@@ -189,8 +189,8 @@ $Time = date("h:i:sa");
    $Details = 'Note: Your application will be evaluated. Complete and correct documents will be officially received and processed,
     while incomplete documents will be returned and end the transaction. You will be notified of the status of your application thru SMS 
     and to your O-LDPMS registered account. For the return application, it is indicated in the notification either lacks requirements or correction of 
-    the wrong data entry in the required documents. Upon compliance, you may reapply using the registered O-LDPMS account.';
-
+    the wrong data entry in the required documents. Upon compliance, you may reapply using the registered O-LDPMS account. ';
+ 
    $query2 = $connection->prepare("INSERT INTO client_client_document_history(
     lumber_app_id,
     Date,
