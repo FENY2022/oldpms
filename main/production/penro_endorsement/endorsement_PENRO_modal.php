@@ -38,6 +38,9 @@ $lumber_app = "SELECT * FROM lumber_application where lumber_app_id = $lumber_ap
 $lumber_app_qry = mysqli_query($con, $lumber_app);
 $lumber_ap_row2 = mysqli_fetch_assoc($lumber_app_qry);
 $municipal_qry_result = $lumber_ap_row2['Office'];
+$Status_ = $lumber_ap_row2['Status_'];
+       
+
 
 
 

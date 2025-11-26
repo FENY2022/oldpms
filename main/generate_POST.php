@@ -30,6 +30,8 @@ $lumber_app_qry = mysqli_query($con, $lumber_app);
 $lumber_ap_row3 = mysqli_fetch_assoc($lumber_app_qry);
 $office = $lumber_ap_row3['Office'];
 $Flow_stat = $lumber_ap_row3['Flow_stat'];
+$Status_ = $lumber_ap_row3['Status_'];
+
 
 $lumber_app = "SELECT * FROM order_of_payment where lumber_app_id = $lumber_app_id ";
 $lumber_app_qry = mysqli_query($con, $lumber_app);

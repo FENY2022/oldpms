@@ -211,8 +211,8 @@ $signature_1 = $row['signature_file'] ?? null;
                                                         $ldname_qry = $result_municipal['perm_fname']. ' ' .$result_municipal['perm_lname'];
                                                         $full_address = $result_municipal['full_address'];
                                                         $office_qry_result = $result_municipal['Office'];
+                                                        $Status_ = $result_municipal['Status_'];
                 
-
                                                         $lumber_app = "SELECT * FROM muncity where mun_code  = $municipal_qry";
                                                         $lumber_app_qry = mysqli_query($con, $lumber_app);
                                                         $result_municipal = mysqli_fetch_assoc($lumber_app_qry);

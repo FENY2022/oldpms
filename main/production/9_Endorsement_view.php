@@ -74,6 +74,7 @@ $Amount_Decimal = $result_orderofpayment['Amount_Decimal'];
                     $_office_cover = $result['Office'];
                     $suffix = $result['Suffix'];
                     $Flow_stat = $result['Flow_stat'];
+                    $Status_ = $result['Status_'];
 
 
 
