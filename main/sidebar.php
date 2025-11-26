@@ -253,7 +253,7 @@ $stmt->close();
           <i class="fas fa-times me-1"></i> Close
         </button>
         <a href="view_expiration.php" target="_blank" class="btn btn-primary rounded-pill">
-          <i class="fas fa-expand me-1"></i> Full Screen View
+          <i class="fas fa-expand me-1"></i>  Full Screen View
         </a>
       </div>
     </div>
