@@ -27,6 +27,8 @@ $lumber_ap_row3 = mysqli_fetch_assoc($lumber_app_qry);
 $office = $lumber_ap_row3['Office'];
 
 $Flow_stat = $lumber_ap_row3['Flow_stat'];
+$Status_ = $lumber_ap_row3['Status_'];
+
 
 
 $stmt = $connection->query("SELECT 

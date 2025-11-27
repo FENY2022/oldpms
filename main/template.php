@@ -70,7 +70,7 @@
 		 <tr>
 		 <td style="width:13%;padding-bottom:37px;"><strong>SUBJECT</strong></td>
 		 <td style="width:7%;padding-bottom:37px;"><strong>:</strong></td>
-		 <td style="width:80%;text-transform:uppercase;text-align:justify;"><strong>NEW APPLICATION OF <?php echo $ldname; ?> FOR CERTIFICATE OF REGISTRATION AS LUMBER DEALER WITH BUSINESS OPERATION LOCATED AT <?php echo $ldaddress; ?> </strong></td>
+		 <td style="width:80%;text-transform:uppercase;text-align:justify;"><strong><?php echo $Status_ ;?> APPLICATION OF <?php echo $ldname; ?> FOR CERTIFICATE OF REGISTRATION AS LUMBER DEALER WITH BUSINESS OPERATION LOCATED AT <?php echo $ldaddress; ?> </strong></td>
 		 </tr>
 	</table>
     <table>
@@ -83,7 +83,7 @@
 	</table>
    <hr style="width:100%;text-align:left;margin-left:0">
 
-   <dt class="col-sm-3" style="text-align:justify;">This pertains to the above subject new application for Certificate of Registration as Lumber Dealer of <strong> <?php echo $ldname; ?></strong> with place of operation at <strong> <?php echo $ldaddress; ?></strong>.</dt>
+   <dt class="col-sm-3" style="text-align:justify;">This pertains to the above subject <?php echo strtolower($Status_) ;?> application for Certificate of Registration as Lumber Dealer of <strong> <?php echo $ldname; ?></strong> with place of operation at <strong> <?php echo $ldaddress; ?></strong>.</dt>
     <br/>    
    <dt class="col-sm-3">Please be apprised of the following information regarding the subject application:</dt>
 <br/>
