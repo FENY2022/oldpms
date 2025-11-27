@@ -43,8 +43,7 @@ if (isset($_SESSION["client_id"])) {
             $mobileno = $result['mobilenum'];
         } else {
             // Handle case where client_id is in session but no user is found
-            $em = "Client account information not found.";
-            header("Location: univmodal.php?error=" . urlencode($em));
+            echo "<script type='text/javascript'>alert('Client account information not found.');</script>";
             exit;
         }
     } catch (PDOException $e) {
@@ -144,43 +143,6 @@ if (isset($_POST['num']) && !empty($reg)) {
     <link rel="stylesheet" href="../fonts/css/all.css">
     <link href="css/custom_styles.css" rel="stylesheet">
 
-    <style>
-        /* Custom Styles for improved UI */
-        .progress-step {
-            padding: 5px 15px !important; /* Adjusted for better look */
-        }
-        .form-step {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-top: 20px;
-        }
-        .form-step h3 {
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .form-floating input:read-only {
-            background-color: #f8f9fa !important;
-        }
-        .custom_upload_item {
-            border: 1px solid #dee2e6;
-            border-radius: 0.25rem;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        .custom_upload_item .btn {
-            min-width: 120px;
-        }
-        .custom_upload_item span {
-            display: block;
-        }
-        .custom_upload_item i {
-            margin-right: 5px;
-        }
-    </style>
-
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -267,207 +229,158 @@ if (isset($_POST['num']) && !empty($reg)) {
                             </div>
 
                             <div class="form-step form-step-active">
-                                <div class="container mt-3 p-0">
-                                    <h3 class="text-center" style="font-family: system-ui; font-weight: 600;"><i class="fa-regular fa-user" style="margin-right: 15px;"></i>Applicant's Basic Information</h3>
-                                    <label class="d-block text-center mb-4" style="font-family: system-ui; color: #ff0000; font-weight: 600; font-size: 20px;"><i>(For Renewal)</i></label>
-                                    <p id="refno" style="font-size: 14px; color: red;"><i>Please enter the reference no.</i></p>
+                                <div class="input-group">
+                                    <div class="container mt-3">
+                                        <h3 class="text-center" style="font-family: system-ui; font-weight: 600;"><i class="fa-regular fa-user" style="margin-right: 15px; margin-left: 12px;"></i>Applicant's Basic Information</h3>
+                                        <label class="text-center" style="font-family: system-ui; color: #ff0000; font-weight: 600; font-size: 20px;"><i>(For Renewal)</i></label>
+                                        <p id="refno" style="font-size: 14px; color: red;"><i>Please enter the reference no.</i></p>
 
-                                    <div class="mb-3">
-                                        <div class="form-floating">
-                                            <input autofocus type="text" id="lumberd" class="form-control" placeholder="Lumber Dealer Registration No." aria-label="Enter Lumber Dealer No." name="num" data-toggle="modal" data-target="#exampleModal" value="<?php echo htmlspecialchars($reg); ?>" readonly>
-                                            <label for="lumberd">Lumber Dealer Registration No. *</label>
-                                        </div>
-                                    </div>
+                                        <input autofocus type="text" id="lumberd" style="width: 330px; margin-top: 15px;" class="form-control" placeholder="Lumber Dealer Registration No." aria-label="Enter Lumber Dealer No." name="num" data-toggle="modal" data-target="#exampleModal" value="<?php echo htmlspecialchars($reg); ?>" readonly>
 
-                                    <div class="row mb-3">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="perm_fname" placeholder="First Name*" aria-label="First name" name="perm_fname" value="<?php echo htmlspecialchars($name); ?>">
-                                                <label for="perm_fname">First Name *</label>
+                                        <div class="row">
+                                            <div class="col"><br>
+                                                <input readonly style="width: 330px;" type="text" class="form-control" placeholder="First Name*" aria-label="First name" name="perm_fname" value="<?php echo htmlspecialchars($name); ?>">
+                                            </div>
+                                            <div class="col"><br>
+                                                <input readonly style="width: 330px;" type="text" class="form-control" placeholder="Last Name*" aria-label="Last name" name="perm_lname" value="<?php echo htmlspecialchars($lname); ?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="perm_lname" placeholder="Last Name*" aria-label="Last name" name="perm_lname" value="<?php echo htmlspecialchars($lname); ?>">
-                                                <label for="perm_lname">Last Name *</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Permit Type*" aria-label="Application Type" name="permit_type" value="<?php echo htmlspecialchars($Permit_Type); ?>" required>
+                                            </div>
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Business Name*" aria-label="Business name" name="bussiness_name" value="<?php echo htmlspecialchars($bussiness_name); ?>">
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="row mb-3">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="permit_type" placeholder="Permit Type*" aria-label="Application Type" name="permit_type" value="<?php echo htmlspecialchars($Permit_Type); ?>" required>
-                                                <label for="permit_type">Permit Type *</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="bussiness_name" placeholder="Business Name*" aria-label="Business name" name="bussiness_name" value="<?php echo htmlspecialchars($bussiness_name); ?>">
-                                                <label for="bussiness_name">Business Name *</label>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row mb-3">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="province_str" placeholder="Province*" aria-label="Province" name="province_str" value="<?php echo htmlspecialchars($prov_name); ?>">
-                                                <label for="province_str">Province *</label>
-                                                <input type="hidden" name="province" value="<?php echo htmlspecialchars($prov_code_spc); ?>">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Province*" aria-label="Province" name="province" value="<?php echo htmlspecialchars($prov_code_spc); ?>" hidden>
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Province*" aria-label="Province" name="province_str" value="<?php echo htmlspecialchars($prov_name); ?>">
+                                            </div>
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="City/Municipality*" aria-label="City/Municipality" name="citymun" value="<?php echo htmlspecialchars($muncity_code_spc); ?>" hidden>
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="City/Municipality*" aria-label="City/Municipality" name="citymun_str" value="<?php echo htmlspecialchars($muncity_name); ?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="citymun_str" placeholder="City/Municipality*" aria-label="City/Municipality" name="citymun_str" value="<?php echo htmlspecialchars($muncity_name); ?>">
-                                                <label for="citymun_str">City/Municipality *</label>
-                                                <input type="hidden" name="citymun" value="<?php echo htmlspecialchars($muncity_code_spc); ?>">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Barangay*" aria-label="Barangay" name="brgy" value="<?php echo htmlspecialchars($brgy_code_spc); ?>" hidden>
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Barangay*" aria-label="Barangay" name="brgy_str" value="<?php echo htmlspecialchars($brgy_name); ?>">
+                                            </div>
+                                            <div class="col">
+                                                <input readonly style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Zip Code*" aria-label="Zip code" name="Zip_code" value="<?php echo htmlspecialchars($zip_code); ?>">
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <input readonly style="width: 685px; margin-top: 10px;" type="text" class="form-control" placeholder="Street/Corner/Purok*" aria-label="Street/corner/purok" name="purok" value="<?php echo htmlspecialchars($purok); ?>">
+                                            </div>
+                                        </div>
 
-                                    <div class="row mb-3">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="brgy_str" placeholder="Barangay*" aria-label="Barangay" name="brgy_str" value="<?php echo htmlspecialchars($brgy_name); ?>">
-                                                <label for="brgy_str">Barangay *</label>
-                                                <input type="hidden" name="brgy" value="<?php echo htmlspecialchars($brgy_code_spc); ?>">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="E-Mail (Optional)" aria-label="Email" name="perm_email" value="<?php echo htmlspecialchars($perm_email); ?>">
+                                            </div>
+                                            <div class="col">
+                                                <input style="width: 330px; margin-top: 10px;" type="text" class="form-control" placeholder="Mobile No.*" aria-label="Mobile no" name="perm_contact" value="<?php echo htmlspecialchars($perm_contact); ?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input readonly type="text" class="form-control" id="zip_code" placeholder="Zip Code*" aria-label="Zip code" name="Zip_code" value="<?php echo htmlspecialchars($zip_code); ?>">
-                                                <label for="zip_code">Zip Code *</label>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <div class="form-floating">
-                                            <input readonly type="text" class="form-control" id="purok" placeholder="Street/Corner/Purok*" aria-label="Street/corner/purok" name="purok" value="<?php echo htmlspecialchars($purok); ?>">
-                                            <label for="purok">Street/Corner/Purok *</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-4">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="form-floating">
-                                                <input type="email" class="form-control" id="perm_email" placeholder="E-Mail (Optional)" aria-label="Email" name="perm_email" value="<?php echo htmlspecialchars($perm_email); ?>">
-                                                <label for="perm_email">E-Mail (Optional)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="perm_contact" placeholder="Mobile No.*" aria-label="Mobile no" name="perm_contact" value="<?php echo htmlspecialchars($perm_contact); ?>">
-                                                <label for="perm_contact">Mobile No. *</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="text-center">
-                                    <a href="#" class="btn btn-primary new-btn width-50" id="proceeds" style="font-family: system-ui; font-weight: 500; font-size: 16px;">Next<i class="fa-solid fa-circle-arrow-right" style="margin-left: 10px;"></i></a>
+                                <div class="">
+                                    <center><a href="#" class="custom_btn new-btn width-50" id="proceeds" style="font-family: system-ui; font-weight: 500; font-size: 16px;">Next<i class="fa-solid fa-circle-arrow-right" style="margin-left: 10px;"></i></a></center>
                                 </div>
                             </div>
 
                             <div class="form-step">
-                                <div class="mb-4">
-                                    <h3 style="font-family: system-ui; font-weight: 600"><i class="fa-regular fa-file" style="margin-right: 13px;"></i>Upload Documents (RENEW)</h3>
-                                    <p class="mb-0" style="font-size: 17px;">Click "Browse" to upload document.</p>
-                                    <p style="color: red; font-size: 15px;"><i>Note: Only PDF File not larger than 10 MB is allowed.</i></p>
+                                <div class="input-group">
+                                    <div>
+                                        <h3 style="font-family: system-ui; font-weight: 600"><i class="fa-regular fa-file" style="margin-right: 13px;"></i>Upload Documents (RENEW)</h3>
+                                        <label style="font-size: 17px;">Click "Browse" to upload document. <br><span style="color: red; font-size: 15px;"><i>Note: Only PDF File not larger than 10 MB is allowed.</i></span></label>
+                                    </div>
+                                    <table class="table table-bordered" style="margin-top: 10px;">
+                                        <tr>
+                                            <th colspan="2" style="background: #597EFB; color: #fff; font-weight: 300;">Required Documents</th>
+                                            <th style="background: #597EFB; color: #fff; font-weight: 300;">File Size</th>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text" style="font-size: 13px; color: #808080;">1. Application form duly accomplished & sworn/notarized.<span style="color: red; font-weight: 500;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb1"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text2" style="font-size: 12px; color: #808080;">2. Lumber Supply Contract/Agreement from legitimate suppliers/subsisting lumber dealers.<span style="font-weight: 500; color: red;"><i> *Required</i></span><span style="font-weight: 500; color: black;"> (not required if the applicant is a mini-sawmill permittee)</span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button2" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px; " id="mb2"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text3" style="font-size: 13px; color: #808080;">3. Mayor's Permit/Business Permit<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button3" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb3"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text4" style="font-size: 13px; color: #808080;">4. Annual Business Plan/Program<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button4" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb4"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text5" style="font-size: 13px; color: #808080;">5. Latest Income Tax Return<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button5" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb5"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text6" style="font-size: 13px; color: #808080;">6. Ending stocked inventory report duly subscribed/sworn<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button6" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb6"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="border-right-color: #fff;">
+                                                <span id="custom-text7" style="font-size: 13px; color: #808080;">7. Summary reports showing the monthly lumber purchases, production, disposition/sales ending inventory report and other relevant information within the tenure of the permit duly attested by the CENRO concerned. <span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
+                                            </td>
+                                            <td align="center">
+                                                <button type="button" id="custom-button7" class="btn btn-primary btn-sm" style="width: 100px; height:30px;">Browse..</button>
+                                            </td>
+                                            <td align="center" style="color: #808080; font-size: 15px;" id="mb7"></td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                
-                                <div class="list-group">
-                                    
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text" style="font-size: 13px; color: #808080;">1. Application form duly accomplished & sworn/notarized.<span style="color: red; font-weight: 500;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb1" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text2" style="font-size: 13px; color: #808080;">2. Lumber Supply Contract/Agreement from legitimate suppliers/subsisting lumber dealers.<span style="font-weight: 500; color: red;"><i> *Required</i></span><span style="font-weight: 500; color: black;"> (not required if the applicant is a mini-sawmill permittee)</span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb2" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button2" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text3" style="font-size: 13px; color: #808080;">3. Mayor's Permit/Business Permit<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb3" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button3" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text4" style="font-size: 13px; color: #808080;">4. Annual Business Plan/Program<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb4" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button4" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text5" style="font-size: 13px; color: #808080;">5. Latest Income Tax Return<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb5" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button5" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text6" style="font-size: 13px; color: #808080;">6. Ending stocked inventory report duly subscribed/sworn<span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb6" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button6" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item custom_upload_item d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <span id="custom-text7" style="font-size: 13px; color: #808080;">7. Summary reports showing the monthly lumber purchases, production, disposition/sales ending inventory report and other relevant information within the tenure of the permit duly attested by the CENRO concerned. <span style="font-weight: 500; color: red;"><i> *Required</i></span></span>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <span id="mb7" class="me-3" style="color: #808080; font-size: 15px;"></span>
-                                            <button type="button" id="custom-button7" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-solid fa-cloud-arrow-up"></i> Browse..
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="btns-group d-flex justify-content-between mt-4">
-                                    <a href="#" class="btn btn-secondary btn-prev">Back</a>
-                                    <button type="submit" class="btn btn-success" name="btn" data-toggle="modal" disabled="true" id="acceptBtn">
-                                        <i class="fa-solid fa-paper-plane"></i> Submit
-                                    </button>
+                                <div class="btns-group">
+                                    <a href="#" class="custom_btn_prev custom_btn btn-prev">Back</a>
+                                    <button type="submit" class="btn btn-success" name="btn" data-toggle="modal" disabled="true" id="acceptBtn">Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -559,8 +472,6 @@ if (isset($_POST['num']) && !empty($reg)) {
         // Helper function for file upload logic (cleaned up and combined)
         function setupFileHandler(fileInput, customButton, customTextElement, customTextMBElement, originalText, shortLabel) {
             const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
-            const requiredText = customTextElement.querySelector('span:last-child') ? customTextElement.querySelector('span:last-child').outerHTML : '';
-            const originalFullText = customTextElement.innerHTML;
 
             customButton.addEventListener("click", function() {
                 fileInput.click();
@@ -570,10 +481,10 @@ if (isset($_POST['num']) && !empty($reg)) {
                 const files = this.files;
                 
                 if (files.length === 0) {
-                    customTextElement.innerHTML = originalFullText;
+                    customTextElement.innerHTML = originalText;
                     customTextElement.style.color = "#808080";
                     customTextMBElement.innerHTML = '';
-                    customButton.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Browse..';
+                    customButton.innerHTML = 'Browse..';
                     checkAllFilesUploaded();
                     return;
                 }
@@ -586,9 +497,7 @@ if (isset($_POST['num']) && !empty($reg)) {
                     customTextMBElement.style.color = "red";
                     customTextElement.style.color = "red";
                     customTextElement.innerHTML = `File too large: ${file.name}`;
-                    customButton.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Error';
-                    customButton.classList.remove('btn-outline-primary');
-                    customButton.classList.add('btn-danger');
+                    customButton.innerHTML = 'Browse..';
                     fileInput.value = ''; // Clear file input
                 } else {
                     // Calculate size string
@@ -598,12 +507,10 @@ if (isset($_POST['num']) && !empty($reg)) {
 
                     // Update UI on success
                     customTextMBElement.innerHTML = _size;
-                    customTextMBElement.style.color = "green";
+                    customTextMBElement.style.color = "#808080";
                     customTextElement.style.color = "#4285F4"; // Blue color for uploaded file
-                    customTextElement.innerHTML = `<span style='color:black; font-weight: 600;'>${shortLabel}</span><br>File: <i class='fa-solid fa-file-pdf'></i> ${file.name} ${requiredText}`;
-                    customButton.innerHTML = "<span style='font-size: 12px;'><i class='fa-solid fa-check'></i> Uploaded</span>";
-                    customButton.classList.remove('btn-outline-primary', 'btn-danger');
-                    customButton.classList.add('btn-success');
+                    customTextElement.innerHTML = `<span style='color:black'>${shortLabel}<br></span>${file.name}`;
+                    customButton.innerHTML = "<span style='font-size: 12px;'>File uploaded..</span>";
                 }
                 
                 checkAllFilesUploaded();
@@ -631,26 +538,19 @@ if (isset($_POST['num']) && !empty($reg)) {
 
         // Initialize handlers on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Restore original HTML content of the text spans for proper display and reference
-            customTxt.innerHTML = "1. Application form duly accomplished & sworn/notarized.<span style=\"color: red; font-weight: 500;\"><i> *Required</i></span>";
-            customTxt2.innerHTML = "2. Lumber Supply Contract/Agreement from legitimate suppliers/subsisting lumber dealers.<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span><span style=\"font-weight: 500; color: black;\"> (not required if the applicant is a mini-sawmill permittee)</span>";
-            customTxt3.innerHTML = "3. Mayor's Permit/Business Permit<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>";
-            customTxt4.innerHTML = "4. Annual Business Plan/Program<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>";
-            customTxt5.innerHTML = "5. Latest Income Tax Return<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>";
-            customTxt6.innerHTML = "6. Ending stocked inventory report duly subscribed/sworn<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>";
-            customTxt7.innerHTML = "7. Summary reports showing the monthly lumber purchases, production, disposition/sales ending inventory report and other relevant information within the tenure of the permit duly attested by the CENRO concerned. <span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>";
-
             const fileData = [
-                { input: realFileBtn, button: customBtn, text: customTxt, mb: customTxtMB, original: customTxt.innerHTML, short: "Application form duly accomplished & sworn/notarized." },
-                { input: realFileBtn2, button: customBtn2, text: customTxt2, mb: customTxtMB2, original: customTxt2.innerHTML, short: "Lumber Supply Contract/Agreement from legitimate suppliers/subsisting lumber dealers." },
-                { input: realFileBtn3, button: customBtn3, text: customTxt3, mb: customTxtMB3, original: customTxt3.innerHTML, short: "Mayor's Permit/Business Permit" },
-                { input: realFileBtn4, button: customBtn4, text: customTxt4, mb: customTxtMB4, original: customTxt4.innerHTML, short: "Annual Business Plan/Program" },
-                { input: realFileBtn5, button: customBtn5, text: customTxt5, mb: customTxtMB5, original: customTxt5.innerHTML, short: "Latest Income Tax Return" },
-                { input: realFileBtn6, button: customBtn6, text: customTxt6, mb: customTxtMB6, original: customTxt6.innerHTML, short: "Ending stocked inventory report duly subscribed/sworn" },
-                { input: realFileBtn7, button: customBtn7, text: customTxt7, mb: customTxtMB7, original: customTxt7.innerHTML, short: "Summary reports showing the monthly lumber purchases, production, disposition/sales ending inventory report and other relevant information within the tenure of the permit duly attested by the CENRO concerned." },
+                { input: realFileBtn, button: customBtn, text: customTxt, mb: customTxtMB, original: "1. Application form duly accomplished & sworn/notarized.<span style=\"color: red; font-weight: 500;\"><i> *Required</i></span>", short: "1. Application form duly accomplished & sworn/notarized." },
+                { input: realFileBtn2, button: customBtn2, text: customTxt2, mb: customTxtMB2, original: "2. Lumber Supply Contract/Agreement from legitimate suppliers/subsisting lumber dealers.<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span><span style=\"font-weight: 500; color: black;\"> (not required if the applicant is a mini-sawmill permittee)</span>", short: "2. Lumber Supply Contract/Agreement..." },
+                { input: realFileBtn3, button: customBtn3, text: customTxt3, mb: customTxtMB3, original: "3. Mayor's Permit/Business Permit<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>", short: "3. Mayor's Permit/Business Permit" },
+                { input: realFileBtn4, button: customBtn4, text: customTxt4, mb: customTxtMB4, original: "4. Annual Business Plan/Program<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>", short: "4. Annual Business Plan/Program" },
+                { input: realFileBtn5, button: customBtn5, text: customTxt5, mb: customTxtMB5, original: "5. Latest Income Tax Return<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>", short: "5. Latest Income Tax Return" },
+                { input: realFileBtn6, button: customBtn6, text: customTxt6, mb: customTxtMB6, original: "6. Ending stocked inventory report duly subscribed/sworn<span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>", short: "6. Ending stocked inventory report..." },
+                { input: realFileBtn7, button: customBtn7, text: customTxt7, mb: customTxtMB7, original: "7. Summary reports showing the monthly lumber purchases, production, disposition/sales ending inventory report and other relevant information within the tenure of the permit duly attested by the CENRO concerned. <span style=\"font-weight: 500; color: red;\"><i> *Required</i></span>", short: "7. Summary reports showing the monthly lumber purchases..." },
             ];
 
             fileData.forEach(data => {
+                // Restore original HTML content of the text spans for the setup function
+                data.text.innerHTML = data.original; 
                 setupFileHandler(data.input, data.button, data.text, data.mb, data.original, data.short);
             });
             
