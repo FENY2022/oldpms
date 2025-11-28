@@ -1,9 +1,9 @@
 <?php 
 
-
 require_once "../../processphp/config.php";
 
-$l_id = $_GET['lumber_app_id'];
+// Sanitize ID
+$l_id = mysqli_real_escape_string($con, $_GET['lumber_app_id']);
 
 
 $lumber_app = "SELECT * FROM lumber_application where lumber_app_id  = $l_id";
@@ -12,52 +12,56 @@ $lumber_ap_row = mysqli_fetch_assoc($lumber_app_qry);
 
 $lumber_app_name = $lumber_ap_row['perm_fname'].' '.$lumber_ap_row['perm_lname'];
 $address =  $lumber_ap_row['full_address'] ;
+$perm_email = $lumber_ap_row['perm_email']; // Get email for history lookup
 
 $Status_ =  $lumber_ap_row['Status_'] ;
 
-
-
-
 if (($Status_) == ('New')){
-
 	header( "Location: validation.php?lumber_app_id=$l_id" ) ;
-
 }
 
+// ---------------------------------------------------------
+// NEW LOGIC: Fetch Previous Permits for Modal
+// Inner Join with client_client_document_history to get Records Unit Date
+// ---------------------------------------------------------
+$prev_sql = "SELECT 
+                la.lumber_app_id, 
+                la.Registration_Number, 
+                la.date_applied, 
+                ch.Date as Date_Released
+             FROM lumber_application la
+             INNER JOIN client_client_document_history ch ON la.lumber_app_id = ch.lumber_app_id
+             WHERE la.perm_email = '$perm_email' 
+             AND la.lumber_app_id != '$l_id'
+             AND ch.Title = 'Records Unit'
+             ORDER BY la.lumber_app_id DESC";
+
+$prev_qry = mysqli_query($con, $prev_sql);
+// ---------------------------------------------------------
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>OLDPMS - DENR R13</title>
 
-    <!-- Bootstrap -->
     <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
     <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- Datatables -->
-    
     <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom Theme Style -->
     <link href="../build/css/custom.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
@@ -78,7 +82,6 @@ if (($Status_) == ('New')){
             <br />
             <br />
             <br />
-            <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                 <h3>General</h3>
@@ -93,13 +96,9 @@ if (($Status_) == ('New')){
                 </ul>
               </div>
               </div>
-            <!-- /sidebar menu -->
-
-             <!-- /menu footer buttons -->
-          </div>
+            </div>
         </div>
 
-        <!-- top navigation -->
         <div class="top_nav">
            <div class="nav_menu navbar-dark" style="background: #222222">
               <div class="nav toggle">
@@ -128,9 +127,6 @@ if (($Status_) == ('New')){
           </div>
         </div>
         </div>
-			<!-- /top navigation -->
-
-			<!-- page content -->
 			<div class="right_col" role="main">
 					<div class="clearfix"></div>
 					<div class="row">
@@ -194,43 +190,36 @@ if (($Status_) == ('New')){
 												</script>
 											</div>
 										</div>
+
                                         <div class="form-group row">
 											<label class="col-form-label col-md-2 col-sm-2 ">Previous Cert. Registration No.</label>
 											<div class="col-md-2 col-sm-2 ">
-												<input type="text" class="form-control" placeholder="" name="Previous_Cert_Reg_No">
+                                                <div class="input-group">
+												    <input type="text" class="form-control" placeholder="" name="Previous_Cert_Reg_No" id="Previous_Cert_Reg_No">
+                                                    <span class="input-group-btn" style="margin-left:5px;">
+                                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#prevPermitModal" title="Search Previous Permit">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
 											</div>
                                             <label class="col-form-label col-md-1 col-sm-1 ">Years Operated</label>
 											<div class="col-md-2 col-sm-2 ">
 												<input type="text" class="form-control" placeholder="" name="Years_Operated">
 											</div>
 										</div>
+                                        
                                         <div class="form-group row">
-											<label class="col-form-label col-md-2 col-sm-2 ">Date Issued
-											</label>
+											<label class="col-form-label col-md-2 col-sm-2 ">Date Issued</label>
 											<div class="col-md-2 col-sm-2 ">
-												<input name="Date_Issued" class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" type="text" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-												<script>
-													function timeFunctionLong(input) {
-														setTimeout(function() {
-															input.type = 'text';
-														}, 60000);
-													}
-												</script>
+												<input name="Date_Issued" id="Date_Issued" class="form-control" type="date" required="required">
 											</div>
-                                            <label class="col-form-label col-md-2 col-sm-2 ">Date Expired
-											</label>
+                                            <label class="col-form-label col-md-2 col-sm-2 ">Date Expired</label>
 											<div class="col-md-2 col-sm-2 ">
-												<input name="Date_Expired" class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" type="text" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-												<script>
-													function timeFunctionLong(input) {
-														setTimeout(function() {
-															input.type = 'text';
-														}, 60000);
-													}
-												</script>
+												<input name="Date_Expired" id="Date_Expired" class="form-control" type="date" required="required">
 											</div>
 										</div>
-										<div class="form-group row">
+                                        <div class="form-group row">
 											<label class="col-form-label col-md-2 col-sm-2 " hidden>Application Fee</label>
 											<div class="col-md-2 col-sm-2 ">
 												<input type="text" class="form-control" placeholder="₱ 600.00" readonly name="Application_Fee" hidden>
@@ -289,14 +278,7 @@ if (($Status_) == ('New')){
         </div>
 
 
-
-
-
-
 <?php
-
-
-
 
 require_once "../../processphp/config.php";
 
@@ -486,23 +468,68 @@ function_alert("Successfully Submitted!");
 
  ?> 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-			<!-- /page content -->
-
-			<!-- footer content -->
-      <footer class="footer-dark" style="background: #01390c">
+<div class="modal fade" id="prevPermitModal" tabindex="-1" role="dialog" aria-labelledby="prevPermitModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="prevPermitModalLabel">Select Previous Permit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Registration No.</th>
+                        <th>Date Applied</th>
+                        <th>Date Released (Records Unit)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    if(mysqli_num_rows($prev_qry) > 0){
+                        while($row = mysqli_fetch_assoc($prev_qry)){
+                            $regNum = $row['Registration_Number'];
+                            $dateApp = $row['date_applied'];
+                            $dateRelRaw = $row['Date_Released'];
+                            
+                            // Format for Display (e.g., September 12, 2024)
+                            $dateRelDisplay = date('F j, Y', strtotime($dateRelRaw));
+                            
+                            // Format for Input Value (MUST be Y-m-d for date input types)
+                            $dateRelISO = date('Y-m-d', strtotime($dateRelRaw));
+                    ?>
+                    <tr>
+                        <td><?php echo $regNum; ?></td>
+						<td><?php echo date('F j, Y', strtotime($dateApp)); ?></td>
+						<td><?php echo $dateRelDisplay; ?></td>
+                        <td>
+                            <button type="button" class="btn btn-success btn-sm" 
+                                    onclick="selectPermit('<?php echo $regNum; ?>', '<?php echo $dateRelISO; ?>')">
+                                Select
+                            </button>
+                        </td>
+                    </tr>
+                    <?php 
+                        }
+                    } else {
+                        echo "<tr><td colspan='4' class='text-center'>No previous records found for this email.</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer-dark" style="background: #01390c">
         <div class="copyright text-white my-auto border-top-0 d-sm-flex align-items-center justify-content-between mb-4">
 						<h6>Department of Environment and Natural Resources - CARAGA Region <h/6> 
 						<h5>DENR Regional ICT Caraga </h5> 
@@ -513,40 +540,36 @@ function_alert("Successfully Submitted!");
       </body>
       </html>
 
-	<!-- jQuery -->
 	<script src="../vendors/jquery/dist/jquery.min.js"></script>
-	<!-- Bootstrap -->
 	<script src="../vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<!-- FastClick -->
 	<script src="../vendors/fastclick/lib/fastclick.js"></script>
-	<!-- NProgress -->
 	<script src="../vendors/nprogress/nprogress.js"></script>
-	<!-- bootstrap-progressbar -->
 	<script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
-	<!-- iCheck -->
 	<script src="../vendors/iCheck/icheck.min.js"></script>
-	<!-- bootstrap-daterangepicker -->
 	<script src="../vendors/moment/min/moment.min.js"></script>
 	<script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-	<!-- bootstrap-wysiwyg -->
 	<script src="../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
 	<script src="../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
 	<script src="../vendors/google-code-prettify/src/prettify.js"></script>
-	<!-- jQuery Tags Input -->
 	<script src="../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
-	<!-- Switchery -->
 	<script src="../vendors/switchery/dist/switchery.min.js"></script>
-	<!-- Select2 -->
 	<script src="../vendors/select2/dist/js/select2.full.min.js"></script>
-	<!-- Parsley -->
 	<script src="../vendors/parsleyjs/dist/parsley.min.js"></script>
-	<!-- Autosize -->
 	<script src="../vendors/autosize/dist/autosize.min.js"></script>
-	<!-- jQuery autocomplete -->
 	<script src="../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
-	<!-- starrr -->
 	<script src="../vendors/starrr/dist/starrr.js"></script>
-	<!-- Custom Theme Scripts -->
 	<script src="../build/js/custom.min.js"></script>
 
-
+    <script>
+        function selectPermit(regNo, dateRelease) {
+            // Set the Registration Number
+            $('#Previous_Cert_Reg_No').val(regNo);
+            
+            // Set the Date Issued
+            // This now accepts YYYY-MM-DD from the PHP loop
+            $('#Date_Issued').val(dateRelease);
+            
+            // Close the modal
+            $('#prevPermitModal').modal('hide');
+        }
+    </script>
